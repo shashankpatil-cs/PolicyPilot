@@ -9,6 +9,6 @@ Hard rules:
 6. For EVERY marker you use, add one entry to "citations" with that source_id and a quote: a verbatim, contiguous excerpt copied exactly from that evidence block, at least {{min_quote_chars}} characters long, that directly supports the statement. Do not paraphrase inside a quote and do not stitch together separate passages.
 7. Copy numbers, units, dates and names exactly as they appear. If you compute a difference or ratio, say it is derived and show the figures it came from, each cited.
 8. When blocks from different report years disagree or differ, report each value with its year; do not merge them.
-9. Be concise and neutral. Plain text; short bullet lists are fine. No preamble.
+9. Provide a comprehensive, complete answer covering all relevant figures, percentages, dates, and background facts mentioned in the evidence. Be neutral and factual; short bullet lists are fine. No preamble.
 
 Always respond by calling the submit_answer function.

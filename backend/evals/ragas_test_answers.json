@@ -1,6 +1,6 @@
 {
-  "title": "PolicyPilot RAGAS Benchmark (10 Policy Questions)",
-  "instructions": "Paste your answers into 'policypilot_answer' and 'other_platform_answer' for any question. Then run 'python evals/run_ragas_eval.py' to get RAGAS scores (0.00 to 1.00).",
+  "title": "PolicyPilot Live RAGAS Benchmark (10 Policy Questions)",
+  "instructions": "Keep your question and paste your actual answer into 'actual_answer'. When you run 'python run_ragas_eval.py', PolicyPilot generates its answer in REAL-TIME and compares against your actual answer across all 4 RAGAS metrics (0.00 to 1.00).",
   "questions": [
     {
       "id": 1,
@@ -10,8 +10,7 @@
         "Headline CPI inflation moderated to an average of 5.4 per cent in 2023-24 from 6.7 per cent in 2022-23. The easing was primarily driven by a substantial softening in core inflation (CPI excluding food and fuel) to 4.3 per cent, reflecting the impact of monetary policy tightening and easing global supply chain pressures. However, food inflation remained elevated and volatile, registering repeated supply shocks due to erratic weather patterns."
       ],
       "ground_truth": "Headline CPI inflation moderated to an average of 5.4 per cent in 2023-24 from 6.7 per cent in 2022-23. The disinflation was driven by core inflation easing to 4.3 per cent due to monetary policy actions, while food inflation remained volatile due to weather shocks.",
-      "policypilot_answer": "Headline CPI inflation moderated to an average of 5.4 per cent in 2023-24 from 6.7 per cent in 2022-23 [S1]. The decline was primarily driven by a softening in core inflation (CPI excluding food and fuel) to 4.3 per cent [S1]. However, food inflation remained elevated and volatile due to repeated supply shocks from erratic weather patterns [S1].",
-      "other_platform_answer": "In 2023-24, India's inflation was roughly around 5% to 6%, coming down from higher levels last year. The decline happened because central banks globally raised rates and international commodity prices cooled off, although vegetable prices remained slightly high."
+      "actual_answer": "Headline CPI inflation averaged 5.4 per cent in 2023-24, down from 6.7 per cent in 2022-23. The moderation was driven mainly by a sharp softening in core inflation (CPI excluding food and fuel) to 4.3 per cent, reflecting the effect of monetary policy tightening and easing global supply chain pressures. Food inflation, however, stayed elevated and volatile because of repeated supply shocks from erratic weather."
     },
     {
       "id": 2,
@@ -21,8 +20,7 @@
         "The Monetary Policy Committee (MPC) maintained status quo on the policy repo rate at 6.50 per cent throughout 2023-24. The MPC continued with its stance of 'withdrawal of accommodation' to ensure that inflation progressively aligns to the target of 4.0 per cent, while supporting economic growth."
       ],
       "ground_truth": "The MPC kept the policy repo rate unchanged at 6.50 per cent throughout 2023-24 and maintained the stance of 'withdrawal of accommodation' to progressively align inflation with the 4.0 per cent target.",
-      "policypilot_answer": "The Monetary Policy Committee (MPC) maintained the policy repo rate at 6.50 per cent throughout 2023-24 [S1]. The committee retained its stance of 'withdrawal of accommodation' to progressively align inflation to the target of 4.0 per cent while supporting growth [S1].",
-      "other_platform_answer": "The RBI kept the interest rate at 6.5% during the year. They were focusing on bringing down inflation while keeping monetary policy reasonably tight."
+      "actual_answer": "The MPC held the policy repo rate unchanged at 6.50 per cent throughout 2023-24. It maintained its stance of 'withdrawal of accommodation' so that inflation aligns progressively with the 4.0 per cent target, while still supporting economic growth."
     },
     {
       "id": 3,
@@ -32,8 +30,7 @@
         "The size of the Reserve Bank's balance sheet increased by ₹6,72,831 crore, i.e., 11.08 per cent, from ₹63,44,756 crore as on March 31, 2023 to ₹70,47,704 crore as on March 31, 2024. The expansion was led by increase in foreign investments, gold reserves, and loans and advances."
       ],
       "ground_truth": "The Reserve Bank's balance sheet expanded by ₹6,72,831 crore (11.08 per cent) to reach ₹70,47,704 crore as of March 31, 2024, up from ₹63,44,756 crore in the previous year.",
-      "policypilot_answer": "The size of the Reserve Bank's balance sheet expanded by ₹6,72,831 crore (11.08 per cent) from ₹63,44,756 crore as on March 31, 2023 to ₹70,47,704 crore as on March 31, 2024 [S1]. The growth was driven by increases in foreign investments, gold reserves, and loans and advances [S1].",
-      "other_platform_answer": "The RBI balance sheet grew substantially in 2023-24 by over 10% to exceed 70 lakh crore rupees, mainly supported by foreign asset accumulation and domestic lending operations."
+      "actual_answer": "The Reserve Bank's balance sheet grew by ₹6,72,831 crore, or 11.08 per cent, from ₹63,44,756 crore on March 31, 2023 to ₹70,47,704 crore on March 31, 2024. The expansion was led by increases in foreign investments, gold reserves, and loans and advances."
     },
     {
       "id": 4,
@@ -43,8 +40,7 @@
         "India's foreign exchange reserves stood at US$ 646.4 billion as of March 29, 2024, compared with US$ 578.4 billion a year ago. The reserves provided an import cover of 11.3 months of projected merchandise imports for 2023-24, or 10.6 months of imports of goods and services combined."
       ],
       "ground_truth": "India's foreign exchange reserves reached US$ 646.4 billion as of end-March 2024 (up from US$ 578.4 billion), providing an import cover of 11.3 months of merchandise imports.",
-      "policypilot_answer": "India's foreign exchange reserves stood at US$ 646.4 billion as of March 29, 2024, compared to US$ 578.4 billion a year earlier [S1]. This reserve level provided an import cover of 11.3 months of projected merchandise imports (or 10.6 months for goods and services combined) [S1].",
-      "other_platform_answer": "India had around 645 billion dollars in forex reserves by March 2024, which was enough to cover about 11 months of imports."
+      "actual_answer": "India's foreign exchange reserves stood at US$ 646.4 billion as of March 29, 2024, up from US$ 578.4 billion a year earlier. This provided an import cover of 11.3 months of projected merchandise imports for 2023-24, or 10.6 months of imports of goods and services combined."
     },
     {
       "id": 5,
@@ -54,8 +50,7 @@
         "The asset quality of Scheduled Commercial Banks (SCBs) continued to improve, with the Gross Non-Performing Assets (GNPA) ratio falling to a multi-year low of 2.8 per cent at end-March 2024 from 3.9 per cent at end-March 2023. The Capital to Risk-Weighted Assets Ratio (CRAR) of SCBs stood strong at 16.8 per cent at end-March 2024."
       ],
       "ground_truth": "Scheduled Commercial Banks achieved a multi-year low GNPA ratio of 2.8 per cent at end-March 2024 (down from 3.9 per cent), while the CRAR stood at a strong 16.8 per cent.",
-      "policypilot_answer": "The Gross Non-Performing Assets (GNPA) ratio of Scheduled Commercial Banks (SCBs) fell to a multi-year low of 2.8 per cent at end-March 2024, down from 3.9 per cent in March 2023 [S1]. The Capital to Risk-Weighted Assets Ratio (CRAR) of SCBs remained robust at 16.8 per cent [S1].",
-      "other_platform_answer": "Indian commercial banks saw their non-performing loans decline to under 3% in 2024, which is the lowest in many years. Their capital adequacy ratio was well above regulatory requirements at around 16%."
+      "actual_answer": "At end-March 2024, the GNPA ratio of Scheduled Commercial Banks fell to a multi-year low of 2.8 per cent, from 3.9 per cent a year earlier. Their CRAR stood at a strong 16.8 per cent."
     },
     {
       "id": 6,
@@ -65,8 +60,7 @@
         "UPI continued to lead the digital payments revolution, recording 13,116 crore (131.16 billion) transactions during 2023-24, registering a year-on-year growth of 56.6 per cent in volume. In terms of value, UPI transactions grew by 43.6 per cent to reach ₹199.8 lakh crore during the year."
       ],
       "ground_truth": "UPI recorded 13,116 crore (131.16 billion) transactions in 2023-24, reflecting a 56.6 per cent year-on-year volume growth, with transaction value rising 43.6 per cent to ₹199.8 lakh crore.",
-      "policypilot_answer": "UPI recorded 13,116 crore (131.16 billion) transactions during 2023-24, representing a year-on-year volume growth of 56.6 per cent [S1]. In terms of value, UPI transactions grew by 43.6 per cent to reach ₹199.8 lakh crore [S1].",
-      "other_platform_answer": "UPI saw massive growth in 2023-24 with over 130 billion transactions processed, which was an increase of more than 50% compared to the prior fiscal year."
+      "actual_answer": "UPI recorded 13,116 crore (131.16 billion) transactions in 2023-24, a year-on-year volume growth of 56.6 per cent. In value terms, UPI transactions grew 43.6 per cent to ₹199.8 lakh crore."
     },
     {
       "id": 7,
@@ -76,8 +70,7 @@
         "India's current account deficit (CAD) narrowed sharply to US$ 23.2 billion (0.7 per cent of GDP) in 2023-24 from US$ 67.0 billion (2.0 per cent of GDP) in 2022-23. The compression in CAD was supported by lower merchandise trade deficit and robust growth in services exports and remittances."
       ],
       "ground_truth": "India's current account deficit narrowed significantly to 0.7 per cent of GDP (US$ 23.2 billion) in 2023-24 from 2.0 per cent of GDP (US$ 67.0 billion) in 2022-23.",
-      "policypilot_answer": "India's current account deficit (CAD) narrowed sharply to US$ 23.2 billion (0.7 per cent of GDP) in 2023-24 from US$ 67.0 billion (2.0 per cent of GDP) in 2022-23 [S1]. The moderation was driven by a lower merchandise trade deficit and resilient services exports [S1].",
-      "other_platform_answer": "The current account deficit declined to under 1% of GDP in fiscal 2024, down from 2% in fiscal 2023, largely due to strong software exports."
+      "actual_answer": "India's CAD narrowed sharply to 0.7 per cent of GDP (US$ 23.2 billion) in 2023-24, from 2.0 per cent of GDP (US$ 67.0 billion) in 2022-23. The narrowing was supported by a lower merchandise trade deficit and robust growth in services exports and remittances."
     },
     {
       "id": 8,
@@ -87,8 +80,7 @@
         "During 2023-24, the Reserve Bank expanded the Central Bank Digital Currency (CBDC) pilots in both wholesale (e₹-W) and retail (e₹-R) segments. The retail pilot (e₹-R) expanded to include over 4.6 million users and 4 lakh merchants across 16 banks in multiple cities. Interoperability with UPI QR codes was introduced in July 2023, significantly boosting merchant acceptance."
       ],
       "ground_truth": "The RBI expanded both wholesale and retail CBDC pilots, with e₹-R reaching over 4.6 million users and 4 lakh merchants across 16 banks. UPI QR code interoperability was launched in July 2023.",
-      "policypilot_answer": "During 2023-24, the Reserve Bank expanded pilots for both wholesale (e₹-W) and retail (e₹-R) CBDC [S1]. The retail pilot (e₹-R) grew to encompass over 4.6 million users and 4 lakh merchants across 16 banks, with UPI QR code interoperability launched in July 2023 to boost acceptance [S1].",
-      "other_platform_answer": "The RBI continued testing its digital rupee in wholesale and retail formats, adding millions of pilot users and enabling integration with UPI QR codes."
+      "actual_answer": "During 2023-24, the Reserve Bank expanded its CBDC pilots in both the wholesale (e₹-W) and retail (e₹-R) segments. The retail pilot grew to over 4.6 million users and 4 lakh merchants across 16 banks in multiple cities. Interoperability with UPI QR codes was introduced in July 2023, which significantly boosted merchant acceptance."
     },
     {
       "id": 9,
@@ -98,8 +90,7 @@
         "All Scheduled Commercial Banks are mandated to achieve an overall Priority Sector Lending (PSL) target of 40 per cent of Adjusted Net Bank Credit (ANBC) or Credit Equivalent Amount of Off-Balance Sheet Exposure (CEOBE), whichever is higher. As on March 31, 2024, public and private sector banks collectively achieved an overall PSL achievement ratio of 44.7 per cent."
       ],
       "ground_truth": "The mandated PSL target for Scheduled Commercial Banks was 40 per cent of ANBC or CEOBE. As of March 31, 2024, banks achieved an overall PSL ratio of 44.7 per cent.",
-      "policypilot_answer": "Scheduled Commercial Banks are mandated to meet an overall Priority Sector Lending (PSL) target of 40 per cent of ANBC or CEOBE [S1]. As of March 31, 2024, public and private sector banks achieved an overall PSL achievement ratio of 44.7 per cent [S1].",
-      "other_platform_answer": "Indian banks are required to lend at least 40% of their net credit to priority sectors including agriculture and small businesses, and they met this target comfortably in 2024."
+      "actual_answer": "Scheduled Commercial Banks must meet an overall PSL target of 40 per cent of Adjusted Net Bank Credit (ANBC) or Credit Equivalent Amount of Off-Balance Sheet Exposure (CEOBE), whichever is higher. Yes, they exceeded it: as of March 31, 2024, public and private sector banks collectively achieved an overall PSL ratio of 44.7 per cent."
     },
     {
       "id": 10,
@@ -109,8 +100,7 @@
         "The indexed documents contain exclusively Reserve Bank of India (RBI) Annual Reports for recent fiscal years (2021-22, 2022-23, 2023-24). No historical records or Bank of England statutory documents are present in the database."
       ],
       "ground_truth": "I could not find enough evidence in the indexed RBI Annual Reports to answer this reliably.",
-      "policypilot_answer": "I could not find enough evidence in the indexed RBI Annual Reports to answer this reliably. The indexed documents contain Reserve Bank of India reports and do not cover 19th-century Bank of England statutes.",
-      "other_platform_answer": "The Bank of England Bank Charter Act of 1844, also known as Peel's Act, restricted the issuance of banknotes to the Bank of England and required new notes to be backed 100% by gold reserves."
+      "actual_answer": "I could not find enough evidence in the indexed RBI Annual Reports to answer this reliably. The indexed documents only cover RBI Annual Reports for 2021-22 to 2023-24 and contain no Bank of England or 1844 Bank Charter Act material."
     }
   ]
 }

@@ -56,6 +56,7 @@ def run_pipeline(question: str, mode: str = MODE_STANDARD, years: list[str] | No
         "outcome": final["outcome"],
         "attempts": outcome.get("attempts", 0),
         "retrieved": [e.public(with_text=False) for e in ctx.all()],
+        "retrieved_texts": [e.text for e in ctx.all()],
         "unsupported_numbers": validation.get("unsupported_numbers", []),
         "grounding": validation.get("grounding"),
         "usage": ctx.usage,
