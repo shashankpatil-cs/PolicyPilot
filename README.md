@@ -1,441 +1,398 @@
-# PolicyPilot | RBI Intelligence AI
+# PolicyPilot 🏛️🤖
 
 <div align="center">
 
-[![Windows](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011-0078D6?style=flat&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![pgvector](https://img.shields.io/badge/pgvector-0.3+-336791?style=flat)](https://github.com/pgvector/pgvector)
-[![Docker](https://img.shields.io/badge/Docker-Compose%20Ready-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
-[![LangGraph](https://img.shields.io/badge/LangGraph-0.2+-blue?style=flat)](https://github.com/langchain-ai/langgraph)
-[![LangSmith](https://img.shields.io/badge/LangSmith-Tracing%20%26%20Evals-orange?style=flat)](https://smith.langchain.com/)
+![PolicyPilot Banner](https://img.shields.io/badge/PolicyPilot-RBI%20Intelligence%20AI-0052CC?style=for-the-badge&logo=probot&logoColor=white)
 
-**Agentic RAG and Deep Research system for multi-year RBI Annual Reports and financial policy analysis with strict citation grounding.**
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-0078D6?style=flat-square&logo=windows&logoColor=white)](https://github.com/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![pgvector](https://img.shields.io/badge/pgvector-HNSW%200.8+-336791?style=flat-square)](https://github.com/pgvector/pgvector)
+[![PyTorch](https://img.shields.io/badge/PyTorch-CUDA%2012.4%20Accelerated-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Workflow%20Orchestration-1C3C3C?style=flat-square)](https://github.com/langchain-ai/langgraph)
+[![OpenAI Agents](https://img.shields.io/badge/OpenAI%20Agents-Deep%20Research-412991?style=flat-square&logo=openai&logoColor=white)](https://openai.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-[Key Features](#-key-features) • [Architecture](#-architecture) • [Prerequisites](#-prerequisites-windows) • [Docker Quickstart](#-docker--docker-compose-quickstart) • [Step-by-Step Setup](#-step-by-step-setup-windows-powershell) • [Configuration](#-configuration-reference) • [Evaluations](#-langsmith--evaluations) • [Project Structure](#-project-structure)
+**An Enterprise-Grade Autonomous RAG & Deep Policy Intelligence Platform for Multi-Year Reserve Bank of India (RBI) Annual Reports.**
+
+*Zero hallucinations • Verbatim citation grounding • Hybrid semantic + lexical retrieval • Local GPU vector embeddings*
+
+[System Architecture](#-system-architecture) • [Workflow Flowcharts](#-end-to-end-workflow-flowcharts) • [Key Capabilities](#-key-capabilities) • [Quickstart Guide](#-quickstart-guide) • [Configuration](#-configuration-reference) • [Engineering Highlights](#-engineering-highlights--optimizations)
 
 </div>
 
 ---
 
-## 📌 Overview
+## 📌 Executive Summary
 
-**PolicyPilot** is an enterprise-grade agentic Question-Answering and Policy Intelligence platform built on top of Reserve Bank of India (RBI) Annual Reports. 
+**PolicyPilot** is a production-grade Agentic Retrieval-Augmented Generation (RAG) platform tailored for regulatory, economic, and monetary policy analysis of Reserve Bank of India (RBI) Annual Reports.
 
-Unlike generic RAG pipelines that hallucinate or mix up financial figures across fiscal years, PolicyPilot guarantees that:
-- Every answer is strictly grounded in retrieved text passages.
-- Every claim carries **verified report-year and page-level citations**.
-- Model-submitted citations undergo deterministic string and fuzzy quote validation directly against raw database chunks.
-- If relevant evidence does not exist in the indexed reports, the system refuses to answer rather than fabricating details.
-
----
-
-## ✨ Key Features
-
-- **🔎 Hybrid Retrieval (Dense + Sparse)**: Combines dense vector semantic search using `BAAI/bge-m3` with PostgreSQL Full-Text Search (tsvector), fused via **Reciprocal Rank Fusion (RRF)**.
-- **🤖 Dual-Mode Intelligence**:
-  - **Standard RAG Mode**: Fast deterministic workflow powered by **LangGraph** (`plan` → `retrieve` → `generate` → `validate`).
-  - **Deep Research Mode**: Multi-turn autonomous investigation driven by the **OpenAI Agents SDK** for multi-step report discovery, cross-referencing, and comparative syntheses.
-- **🛡️ Strict Grounding & Citation Validation**:
-  - Deterministically verifies `[S#]` source tags against extracted chunk text.
-  - Page numbers and report years are read directly from PostgreSQL metadata, never trusted from model hallucinations.
-  - Numerical checks flag discrepancies between cited figures and responses.
-- **📄 Page-Bounded Document Chunking**: High-fidelity PDF extraction with `pymupdf` or `pdfplumber`, ensuring chunks never span multiple pages so page citations are 100% accurate.
-- **🔐 Secure Authentication & Admin Panel**: Role-based access control (Admin & Analyst) using JWT and bcrypt, with an admin portal to upload PDFs and monitor indexing in real time.
-- **📊 Observability & Evals**: Native **LangSmith** integration for full trace inspection, feedback collection, and automated benchmark evaluations.
+Traditional RAG systems frequently hallucinate, conflate statistics across fiscal years, or quote text out of context. PolicyPilot solves this through a **multi-layered verification architecture**:
+1. **Hybrid Retrieval**: Fuses dense semantic embeddings (`BAAI/bge-m3` on local CUDA GPU) with sparse PostgreSQL Full-Text Search (tsvector) using Reciprocal Rank Fusion (RRF).
+2. **Page-Bounded Chunking**: Chunks never cross PDF page boundaries, ensuring 100% accurate page and report-year citations.
+3. **Dual Agent Intelligence**:
+   - **Standard Mode (LangGraph)**: Deterministic planning, query decomposition, retrieval, drafting, and anti-hallucination verification.
+   - **Research Mode (OpenAI Agents SDK)**: Autonomous multi-turn agent that dynamically searches, compares multiple fiscal years, and performs iterative self-correction.
+4. **Deterministic Anti-Hallucination Guard**: Every inline marker (e.g. `[S1]`, `[S2]`) undergoes mathematical string matching and fuzzy verification against raw database chunks. If evidence is missing, the system abstains rather than fabricating numbers.
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
 
+```mermaid
+graph TB
+    subgraph Client ["Client Layer (React 18 + Vite)"]
+        UI["PolicyPilot Modern Web UI"]
+        ChatView["Chat Interface<br/>(Collapsible Verified Sources)"]
+        AdminView["Admin Console<br/>(PDF Indexer & Monitoring)"]
+        UI --> ChatView
+        UI --> AdminView
+    end
+
+    subgraph Gateway ["API & Security Gateway (FastAPI)"]
+        Auth["JWT Auth & Rate Limiter<br/>(bcrypt + Token Auth)"]
+        Router["FastAPI Application Router"]
+        ChatEndpoint["/api/chat/ask"]
+        AdminEndpoint["/api/admin/reports"]
+        Auth --> Router
+        Router --> ChatEndpoint
+        Router --> AdminEndpoint
+    end
+
+    subgraph Intelligence ["Dual Intelligence Engines"]
+        direction TB
+        ModeRouter{"Execution Mode"}
+        LangGraphWorkflow["Standard Mode: LangGraph Workflow<br/>Plan ➔ Retrieve ➔ Draft ➔ Validate ➔ Repair"]
+        ResearchAgent["Research Mode: OpenAI Agents SDK<br/>Autonomous Tool Calling & Multi-Year Comparison"]
+        
+        ChatEndpoint --> ModeRouter
+        ModeRouter -->|standard| LangGraphWorkflow
+        ModeRouter -->|research| ResearchAgent
+    end
+
+    subgraph Verification ["Deterministic Anti-Hallucination Engine"]
+        QuoteVerifier["Verbatim Quote Matcher<br/>(Exact substring + Fuzzy ratio)"]
+        NumericVerifier["Numeric Consistency Guard<br/>(Flags mismatched figures)"]
+        LLMJudge["Grounding LLM Judge<br/>(Optional Claim Verifier)"]
+    end
+
+    subgraph Storage ["Data & Model Infrastructure"]
+        PG[("PostgreSQL 16 + pgvector<br/>- HNSW Cosine Index (1024d)<br/>- GIN Full-Text Index (tsvector)<br/>- Chunks, Reports, Users, Chats")]
+        LocalEmbedder["Local BAAI/bge-m3 Embedder<br/>(NVIDIA CUDA GPU / PyTorch)"]
+    end
+
+    Client -->|REST API + JWT| Gateway
+    LangGraphWorkflow --> Verification
+    ResearchAgent --> Verification
+    LangGraphWorkflow <-->|Hybrid Search| PG
+    ResearchAgent <-->|Dynamic Tools| PG
+    AdminEndpoint -->|PDF Ingestion| LocalEmbedder
+    LocalEmbedder -->|Dense Vectors| PG
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   React + Vite UI (Windows)                 │
-│        (Chat Interface, Source Inspector, Admin Dashboard)  │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ HTTP / JSON (JWT Auth)
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      FastAPI Backend                        │
-├──────────────────────────────┬──────────────────────────────┤
-│      Standard RAG Mode       │      Deep Research Mode      │
-│     (LangGraph Workflow)     │     (OpenAI Agents SDK)      │
-│  [Plan ➔ Retrieve ➔ Answer]   │   [Multi-turn Tool Loop]     │
-└──────────────┬───────────────┴──────────────┬───────────────┘
-               │                              │
-               ▼                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     Deterministic Validator                 │
-│         Verifies [S#] quotes against raw chunk text        │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-               ┌───────────────┴───────────────┐
-               ▼                               ▼
-┌──────────────────────────────┐ ┌───────────────────────────┐
-│     PostgreSQL + pgvector    │ │    HuggingFace Embedder   │
-│  - Vectors (BGE-M3 1024d)    │ │        BAAI/bge-m3        │
-│  - Full-Text Search (BM25/FTS│ │     (Local CPU / CUDA)    │
-│  - Chunks, Reports, Users    │ └───────────────────────────┘
-└──────────────────────────────┘
+
+---
+
+## 🔄 End-to-End Workflow Flowcharts
+
+### 1. Document Ingestion & Vectorization Pipeline
+
+When an administrator uploads an official RBI Annual Report PDF:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Admin as Administrator
+    participant UI as Admin Dashboard
+    participant API as FastAPI Ingestion
+    participant Extractor as PyMuPDF Extractor
+    participant Embedder as BGE-M3 (Local GPU)
+    participant DB as PostgreSQL + pgvector
+
+    Admin->>UI: Uploads RBI Annual Report PDF (e.g. 2023-24)
+    UI->>API: POST /api/admin/reports/upload (multipart/form-data)
+    API->>DB: Record Report entry (Status: uploaded)
+    API-->>UI: 202 Accepted (Background Task started)
+    
+    rect rgb(240, 248, 255)
+        Note over API,DB: Background Indexing Pipeline
+        API->>Extractor: Extract text with page numbers & labels
+        Extractor-->>API: Stream of page-bounded text blocks
+        API->>API: Generate overlapping chunks (Max 1200 chars, page-bounded)
+        API->>Embedder: Batch vectorize chunks (dim=1024) on CUDA GPU
+        Embedder-->>API: 1024-dimensional normalized vectors
+        API->>DB: Bulk insert Chunk records with vectors & tsvectors
+        API->>DB: Update Report status = indexed
+    end
+    UI->>API: Poll /api/admin/reports
+    API-->>UI: Status: indexed (Chunks: 996, Progress: 100%)
 ```
 
 ---
 
-## 📋 Prerequisites (Windows)
+### 2. Standard Mode Query Execution (LangGraph Workflow)
 
-Ensure you have the following installed on Windows 10/11:
+```mermaid
+flowchart TD
+    Start([User submits question]) --> Analyze[1. Analyze & Plan<br/>gpt-4.1-mini plans retrieval strategy]
+    Analyze --> Retrieve[2. Hybrid Retrieval Engine]
 
-1. **Python 3.11+**:
-   - Download from [python.org](https://www.python.org/downloads/).
-   - ⚠️ **Important:** During installation, check the box: **"Add python.exe to PATH"**.
-2. **Node.js 18+ (LTS)** & **npm**:
-   - Download from [nodejs.org](https://nodejs.org/).
-3. **PostgreSQL 14+ with pgvector**:
-   - **Docker Desktop (Recommended)**: Easiest method with no local database installation required. Commands to run `pgvector/pgvector:pg16` are provided in [Step 5](#5-set-up--initialize-database-postgresql--pgvector).
-   - **Local Windows Service**: Official PostgreSQL 14+ installer with the `pgvector` Windows extension.
-4. **Git for Windows**:
-   - Download from [git-scm.com](https://git-scm.com/).
-5. **OpenAI API Key**:
-   - Required for LLM answer generation and research agent planning.
+    subgraph RetrievalEngine ["Local Hybrid Retrieval (Zero Cloud Tokens)"]
+        direction LR
+        DenseSearch["Dense Vector Search<br/>pgvector HNSW (cosine)"]
+        SparseSearch["Sparse Keyword Search<br/>PostgreSQL FTS (ts_rank_cd)"]
+        RRF["Reciprocal Rank Fusion (RRF)<br/>Score = 1/(60 + rank)"]
+        DenseSearch --> RRF
+        SparseSearch --> RRF
+    end
+
+    Retrieve --> RetrievalEngine
+    RetrievalEngine --> FilterChunks[Filter by Year & Threshold >= 0.35]
+    FilterChunks --> CheckEvidence{Evidence<br/>found?}
+
+    CheckEvidence -->|No| Abstain[Abstain Gracefully<br/>'I could not find enough evidence...']
+    CheckEvidence -->|Yes| Generate[3. Generate Draft Answer<br/>gpt-4.1 cites [S#] tags with quotes]
+
+    Generate --> Validate[4. Deterministic Verification]
+
+    subgraph AntiHallucination ["Verification Guardrails"]
+        direction TB
+        V1["Quote Verification: Match >= 25 chars verbatim in chunk"]
+        V2["Numeric Check: Verify figures exist in cited text"]
+        V3["Grounding Check: Validate claim support"]
+        V1 --> V2 --> V3
+    end
+
+    Validate --> AntiHallucination
+    AntiHallucination --> ResultPass{Passes<br/>Validation?}
+
+    ResultPass -->|Yes| Finalize[5. Finalize Answer<br/>Serve verified answer + citations]
+    ResultPass -->|No & Attempts < 2| Repair[Retry with Feedback<br/>Feed missing quotes back to model]
+    Repair --> Generate
+    ResultPass -->|No & Max Attempts| Abstain
+
+    Finalize --> End([Render in UI with Collapsible Sources Dropdown])
+    Abstain --> End
+```
 
 ---
 
-## 🐳 Docker & Docker Compose Quickstart
+### 3. Deep Research Agent Mode (OpenAI Agents SDK)
 
-If you prefer to run the entire PolicyPilot stack (Database, Backend API, and Frontend UI) in containers without manually configuring local Python or Node environments:
+For comparative multi-year inquiries (e.g. *"Compare CPI inflation trends in 2022-23 vs 2023-24"*):
 
-### 1. Configure Backend Environment
+```mermaid
+flowchart TD
+    UserQuery([Complex Multi-Year Query]) --> AgentInit[Initialize Research Agent<br/>Scoped AsyncOpenAI Client]
+
+    subgraph ReActLoop ["Autonomous Agent ReAct Loop (Up to 10 Turns)"]
+        Think[Reasoning & Plan Next Action]
+        ToolCall{Choose Tool}
+
+        T1["list_available_reports()<br/>Inspect indexed fiscal years"]
+        T2["search_reports(query, years)<br/>Semantic + keyword hybrid search"]
+        T3["compare_years(query, years)<br/>Balanced retrieval per year"]
+        T4["verify_citations(draft, citations)<br/>Self-check draft against evidence"]
+
+        Think --> ToolCall
+        ToolCall -->|Inspect| T1
+        ToolCall -->|Deep Search| T2
+        ToolCall -->|Compare| T3
+        ToolCall -->|Self-Verify| T4
+
+        T1 --> Think
+        T2 --> Think
+        T3 --> Think
+        T4 --> Think
+    end
+
+    AgentInit --> ReActLoop
+    ReActLoop --> DraftOutput[Synthesize Comparative Output<br/>Format [S#] markers and citations]
+    DraftOutput --> ServerCheck[Server-Side Independent Verification<br/>Verify all quotes exist in retrieved chunks]
+
+    ServerCheck -->|Passed| FinalResp[Deliver Structured Research Report]
+    ServerCheck -->|Failed| SelfRepair[Agent Repair Loop with Error Feedback]
+    SelfRepair --> ReActLoop
+```
+
+---
+
+## ✨ Key Capabilities
+
+| Capability | PolicyPilot Implementation | Traditional RAG |
+| :--- | :--- | :--- |
+| **Citation Accuracy** | **100% Page & Year Verified**: Checked against raw database chunks via string & fuzzy matching. | Hallucinated or approximate page numbers. |
+| **Retrieval Strategy** | **Hybrid Fusion (Dense + Sparse)**: BGE-M3 vectors + PostgreSQL FTS combined with RRF. | Dense vectors only; misses specific figures and codes. |
+| **Vector Computation** | **Local CUDA GPU**: Runs `BAAI/bge-m3` on your NVIDIA GPU at zero API cost. | Paid cloud embedding API for every query and chunk. |
+| **Anti-Hallucination** | **Refusal Policy**: Abstains if reliable evidence is missing. | Fabricates plausible-sounding financial metrics. |
+| **Multi-Year Analysis** | **Autonomous Agent Mode**: Investigates multiple reports with year-balanced retrieval. | Single-pass retriever mixes up different fiscal years. |
+| **Modern User Interface** | **Collapsible Sources**: Clean answer view by default; expandable inspection dropdowns. | Walls of raw chunk text cluttering the screen. |
+
+---
+
+## 🛠️ Tech Stack
+
+* **Backend**: Python 3.11+, FastAPI, SQLAlchemy 2.0, Pydantic v2
+* **RAG & Agents**: LangGraph, OpenAI Agents SDK (`openai-agents`), LangChain Core
+* **Embeddings & NLP**: Hugging Face Sentence-Transformers, `BAAI/bge-m3` (1024d), PyTorch (CUDA 12.4), RapidFuzz
+* **Database & Search**: PostgreSQL 16, `pgvector` (HNSW indexing with cosine ops), PostgreSQL Full-Text Search (tsvector/GIN)
+* **Frontend**: React 18, Vite 5.4, React Router v6, Vanilla CSS Design System with Google Fonts (*Plus Jakarta Sans*, *Newsreader*, *JetBrains Mono*)
+* **Containerization & Dev**: Docker, Docker Compose, PowerShell scripts
+
+---
+
+## 🚀 Quickstart Guide
+
+### Option A: Docker Compose (Full Stack in 2 Minutes)
+
 ```powershell
+# 1. Clone repository
+git clone https://github.com/your-username/PolicyPilot.git
+cd PolicyPilot
+
+# 2. Configure environment
 copy backend\.env.example backend\.env
-```
-Open `backend\.env` and supply your `OPENAI_API_KEY`:
-```env
-OPENAI_API_KEY=sk-your-openai-api-key-here
-```
+# Supply your OPENAI_API_KEY inside backend\.env
 
-### 2. Build and Start the Full Stack
-```powershell
+# 3. Launch full stack
 docker compose up -d
 ```
-Docker Compose will launch:
-- `rbi_postgres` (pgvector/pgvector:pg16) on port `5432`
-- `rbi_backend` (FastAPI with embeddings & agentic RAG) on port `8000`
-- `rbi_frontend` (React + Vite UI) on port `5173`
 
-### 3. Start or Resume Containers Anytime
-When resuming development or after restarting your PC:
+Access the application:
+* 💻 **Web Application**: [http://localhost:5173](http://localhost:5173)
+* ⚙️ **FastAPI Interactive Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
+* 🩺 **Health Check**: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+
+---
+
+### Option B: Local Setup (Windows PowerShell with CUDA GPU)
+
+#### 1. Start PostgreSQL with pgvector (via Docker)
 ```powershell
-# Start all containers in the stack:
-docker compose start
+# Runs pgvector on port 5433 (avoids port collisions if 5432 is occupied)
+docker run -d --name rbi_postgres -p 5433:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=PolicyPilot pgvector/pgvector:pg16
 
-# Or start the PostgreSQL container directly:
+# When resuming after PC restart:
 docker start rbi_postgres
 ```
 
-### 4. Check Status & Live Logs
-```powershell
-# View running containers:
-docker compose ps
-
-# Follow backend logs:
-docker compose logs -f backend
-```
-
-### 5. Stop Containers
-```powershell
-# Pause / stop services:
-docker compose stop
-
-# Or stop and remove containers (database volume persists):
-docker compose down
-```
-
-Access the application in your browser:
-- 💻 **Frontend**: [http://localhost:5173](http://localhost:5173)
-- ⚙️ **Backend API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- 🩺 **Health Check**: [http://localhost:8000/api/health](http://localhost:8000/api/health)
-
----
-
-## 🚀 Step-by-Step Setup (Windows PowerShell)
-
-Open **PowerShell** (Run as Administrator if needed to allow script execution).
-
-### Step 1: Clone the Repository
-```powershell
-git clone https://github.com/your-username/PolicyPilot.git
-cd PolicyPilot
-```
-
----
-
-### Step 2: Backend Setup
-
-#### 1. Navigate to the backend directory
+#### 2. Backend Setup
 ```powershell
 cd backend
-```
+python -m venv venv
+.\venv\Scripts\Activate.ps1
 
-#### 2. Create and activate a Python virtual environment
-```powershell
-python -m venv .venv
-```
-If script execution is disabled on your system, enable it for this process:
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-```
-Activate the virtual environment:
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-*(Your terminal prompt should now show `(.venv)`)*
-
-#### 3. Install Python dependencies
-```powershell
+# Install dependencies (CPU or CUDA)
 pip install -r requirements.txt
-```
 
-#### 4. Configure environment file (`.env`)
-Create your `.env` from the template:
-```powershell
+# For NVIDIA GPU Acceleration (Optional but Recommended):
+pip install torch --index-url https://download.pytorch.org/whl/cu124 --force-reinstall
+
+# Configure environment
 copy .env.example .env
-```
-Open `.env` in Notepad or VS Code:
-```powershell
-notepad .env
-```
-Update the required variables:
-```env
-# Database Settings
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=rbi_intelligence
-DB_USER=postgres
-DB_PASSWORD=your_postgres_password
+# Edit backend\.env: set OPENAI_API_KEY and DB_PORT=5433
 
-# Authentication
-JWT_SECRET=your_custom_32_plus_character_secret_key_here
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=admin282005
-
-# OpenAI API & Model Selection
-OPENAI_API_KEY=sk-your-openai-api-key-here
-OPENAI_CHAT_MODEL=gpt-4.1
-OPENAI_PLANNER_MODEL=gpt-4.1-mini
-OPENAI_VALIDATOR_MODEL=gpt-4.1-mini
-OPENAI_AGENT_MODEL=gpt-4.1
-
-# Optional Tracing (LangSmith)
-LANGSMITH_TRACING=false
-LANGSMITH_API_KEY=
-```
-Save and close Notepad.
-
-#### 5. Set Up & Initialize Database (PostgreSQL + pgvector)
-
-Ensure PostgreSQL is running before initializing the database:
-
-- **Using Docker (Recommended)**:
-  ```powershell
-  # First time setup (creates and starts container):
-  # Note: port 5433 prevents conflicts if another local PostgreSQL service occupies 5432
-  docker run -d --name rbi_postgres -p 5433:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=PolicyPilot pgvector/pgvector:pg16
-
-  # When resuming work or after PC restart (starts existing container):
-  docker start rbi_postgres
-  ```
-
-- **Using Local Windows PostgreSQL**:
-  Ensure the local PostgreSQL service is running on your configured port with credentials matching `.env` and `pgvector` extension installed.
-
-Once PostgreSQL is running, execute the database setup script:
-```powershell
+# Initialize database schema & pgvector extension
 python scripts\setup_db.py
-```
 
-**Expected output:**
-```text
-Database 'PolicyPilot' created / already exists
-pgvector extension ready (version 0.8.7)
-```
-
-> 💡 **Note**: Application tables, HNSW vector indexes, Full-Text Search (GIN) indexes, and the default admin user are automatically bootstrapped when you start the FastAPI server in Step 6.
-
-#### 6. Start the FastAPI Backend Server
-```powershell
+# Launch FastAPI development server
 uvicorn app.main:app --reload --port 8000
 ```
-The backend API is now running at **http://localhost:8000**.
-- Interactive API Docs (Swagger): **http://localhost:8000/docs**
-- Health check: **http://localhost:8000/api/health**
 
----
-
-### Step 3: Frontend Setup
-
-Open a **second PowerShell window** (leave the backend server running in the first window):
-
-#### 1. Navigate to the frontend directory
+#### 3. Frontend Setup
+Open a second PowerShell window:
 ```powershell
 cd PolicyPilot\frontend
-```
-
-#### 2. Configure environment file (`.env`)
-```powershell
 copy .env.example .env
-```
-*(Default settings point to `http://localhost:8000/api` on port `5173`)*
-
-#### 3. Install packages and launch the frontend
-```powershell
 npm install
 npm run dev
 ```
 
-Open your browser and navigate to:
-👉 **http://localhost:5173**
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
 ## 🔑 Initial Admin Login & Document Ingestion
 
-1. Navigate to **http://localhost:5173/admin/login**.
-2. Sign in with the default admin credentials from `.env`:
-   - **Username**: `admin`
-   - **Password**: `admin282005`
-3. **Upload an RBI Annual Report**:
-   - Enter the fiscal year for the report (e.g., `2023-24` or `2024`).
-   - Select your RBI Annual Report PDF file and click **Upload & Index**.
-   - The backend will extract text, chunk it by page, compute embeddings with `BAAI/bge-m3`, and index both vectors and full-text search tokens into PostgreSQL.
-4. **Start Querying**:
-   - Return to the **Chat** screen (**http://localhost:5173/**).
-   - Toggle between **Standard** mode and **Deep Research** mode.
-   - Inspect source citations, verification scores, and page-level references.
-
-> **Note on Initial Embedding Model Download**:
-> On the very first PDF upload, the system downloads the `BAAI/bge-m3` embedding model (~2.3 GB) from Hugging Face to `%USERPROFILE%\.cache\huggingface`. Subsequent uploads run locally and immediately.
+1. Navigate to **[http://localhost:5173/admin/login](http://localhost:5173/admin/login)**.
+2. Sign in with default administrator credentials:
+   * **Username**: `admin`
+   * **Password**: `admin282005`
+3. **Upload an Annual Report PDF**:
+   * Document Title: `RBI Annual Report 2023-24`
+   * Fiscal Year: `2023-24`
+   * Select your official RBI PDF and click **Upload & Index Report**.
+4. The backend will parse the pages, compute dense BGE-M3 vectors on GPU, and build HNSW index entries.
+5. Click **Open Chat** in the top navigation to start querying!
 
 ---
 
 ## ⚙️ Configuration Reference
 
-All environment variables in `backend\.env`:
+Key variables available in `backend\.env`:
 
-| Variable | Default | Description |
+| Parameter | Default | Purpose |
 | :--- | :--- | :--- |
-| `DB_HOST` | `localhost` | PostgreSQL host |
-| `DB_PORT` | `5432` | PostgreSQL port |
-| `DB_NAME` | `rbi_intelligence` | PostgreSQL database name |
-| `DB_USER` | `postgres` | PostgreSQL username |
-| `DB_PASSWORD` | `postgres` | PostgreSQL password |
-| `JWT_SECRET` | *required* | Random string (min 32 chars) for signing auth JWTs |
-| `OPENAI_API_KEY` | *required* | Your OpenAI API key |
-| `OPENAI_CHAT_MODEL` | `gpt-4.1` | Primary LLM for answering user queries |
-| `OPENAI_PLANNER_MODEL`| `gpt-4.1-mini` | LLM for tool-call planning |
-| `OPENAI_VALIDATOR_MODEL`| `gpt-4.1-mini` | LLM for citation and factual consistency check |
-| `OPENAI_AGENT_MODEL` | `gpt-4.1` | Model for the multi-turn deep research agent |
-| `EMBEDDING_MODEL_NAME` | `BAAI/bge-m3` | Embedding model |
-| `EMBEDDING_DEVICE` | `cpu` | Device for embedding inference (`cpu` or `cuda`) |
-| `RETRIEVAL_TOP_K` | `8` | Top chunk passages fed to the answering model |
-| `MIN_SIMILARITY` | `0.35` | Minimum cosine similarity threshold |
-| `HYBRID_SEARCH` | `true` | Combine dense vectors + sparse full-text search |
-| `LANGSMITH_TRACING` | `false` | Enable LangSmith observability traces |
+| `DB_PORT` | `5433` | PostgreSQL port (5433 prevents collisions with default local services). |
+| `DB_NAME` | `PolicyPilot` | PostgreSQL database name. |
+| `OPENAI_API_KEY` | *required* | OpenAI API key for generation and planning. |
+| `OPENAI_CHAT_MODEL` | `gpt-4.1` | Primary answering model. |
+| `OPENAI_PLANNER_MODEL` | `gpt-4.1-mini` | Retrieval strategy planner model. |
+| `OPENAI_VALIDATOR_MODEL` | `gpt-4.1-mini` | Citation grounding judge model. |
+| `OPENAI_AGENT_MODEL` | `gpt-4.1` | Autonomous Research Agent model. |
+| `EMBEDDING_MODEL_NAME` | `BAAI/bge-m3` | 1024-dimensional dense semantic embedding model. |
+| `EMBEDDING_DEVICE` | `cuda` (or `cpu`) | PyTorch device target (`cuda` activates NVIDIA GPU acceleration). |
+| `RETRIEVAL_TOP_K` | `8` | Number of fused chunks passed to answering model. |
+| `MAX_EVIDENCE_CHUNKS` | `16` | Maximum evidence pool retained in context. |
+| `HYBRID_SEARCH` | `true` | Enables dual vector + full-text search fusion. |
+| `VALIDATION_LLM_CHECK` | `true` | Secondary LLM claim verification (can set to `false` for lean operation). |
+| `LANGSMITH_TRACING` | `false` | Observability and latency tracing via LangSmith. |
 
 ---
 
-## 🧪 Testing & Evaluation (Windows PowerShell)
+## 🧪 Engineering Highlights & Optimizations
 
-In `backend` with your virtual environment activated:
-
-### Run Unit Tests
-```powershell
-pip install pytest httpx
-pytest
-```
-
-### Run Integration Tests
-```powershell
-# Set throwaway test database in PowerShell
-$env:DB_NAME="rbi_test"
-python scripts\setup_db.py
-
-$env:RBI_TEST_DB_NAME="rbi_test"
-pytest
-```
-
----
-
-## 🔬 LangSmith & Evaluations (Windows PowerShell)
-
-To benchmark answer accuracy, citation fidelity, and latency against evaluation datasets:
-
-1. Set your LangSmith API key in `backend\.env`:
-   ```env
-   LANGSMITH_TRACING=true
-   LANGSMITH_API_KEY=your_langsmith_key
-   LANGSMITH_PROJECT=rbi-intelligence-ai
-   ```
-2. Run the evaluation script:
-   ```powershell
-   python -m evals.run_eval
-   ```
-3. Inspect benchmark curves and traces in your LangSmith web dashboard.
+* **Zero Cloud Tokens for Retrieval**: Query embedding (`bge-m3`) and similarity search are performed locally in PostgreSQL with `pgvector` HNSW index. No OpenAI tokens are spent searching.
+* **Proactor Event Loop Resiliency**: Implemented request-scoped `AsyncOpenAI` client lifecycle with explicit `RunConfig` bindings and `finally: await client.close()` in [research_agent.py](backend/app/ai/research_agent.py), completely eliminating Windows `RuntimeError: Event loop is closed` bugs during consecutive queries.
+* **Collapsible Sources UX**: Answers are clean and concise by default; verified citations are tucked inside an interactive accordion that can also be activated by clicking inline citation chips.
+* **Granular Token Management**: Detailed in [bugs.md](bugs.md), documenting how to reduce prompt token consumption by up to 70% while maintaining factual rigor.
 
 ---
 
 ## 📂 Project Structure
 
 ```text
-PolicyPilot\
-├── backend\
-│   ├── app\              # FastAPI application, AI agent, DB & RAG logic
-│   ├── evals\            # LangSmith evaluation datasets and runners
-│   ├── prompts\          # System prompts for planner, chat, agent, validator
-│   ├── scripts\          # DB setup and admin password utility scripts
-│   ├── tests\            # Unit and integration test suite
-│   ├── .dockerignore     # Docker build ignore rules
-│   ├── .env.example      # Backend environment template
-│   ├── Dockerfile        # Backend container specification
-│   └── requirements.txt  # Python dependencies
-├── frontend\
-│   ├── src\              # React components, pages, API clients, styles
-│   ├── .dockerignore     # Docker build ignore rules
-│   ├── .env.example      # Frontend environment template
-│   ├── Dockerfile        # Frontend container specification
-│   ├── package.json      # Frontend dependencies
-│   └── vite.config.js    # Vite configuration
-├── docker-compose.yml    # Full-stack Docker orchestration
-├── .gitignore
-└── README.md
+PolicyPilot/
+├── backend/
+│   ├── app/
+│   │   ├── ai/               # AI Pipelines: LangGraph, Research Agent, Prompts, Tools
+│   │   ├── api/              # FastAPI Routers: Auth, Admin, Chat
+│   │   ├── core/             # Central configuration, Security, Rate Limiter
+│   │   ├── db/               # SQLAlchemy Models, Session, pgvector init
+│   │   └── rag/              # PDF Extraction, Embeddings (BGE-M3), Retriever (RRF)
+│   ├── evals/                # Automated evaluation benchmarks & datasets
+│   ├── prompts/              # System prompts for planner, chat, agent, validator
+│   ├── scripts/              # Setup scripts for database and password hashing
+│   ├── tests/                # Test suite (Unit, Integration, Security, RAG)
+│   ├── .env.example          # Environment configuration template
+│   ├── Dockerfile            # Backend container definition
+│   └── requirements.txt      # Python dependencies
+├── frontend/
+│   ├── src/
+│   │   ├── components/       # Answer (Collapsible Sources), AuthShell
+│   │   ├── pages/            # Chat (Modern UI), Admin Console, Login, Register
+│   │   ├── api.js            # Frontend HTTP client with JWT interceptor
+│   │   └── styles.css        # Modern design system (Plus Jakarta Sans, Dark sidebar)
+│   ├── .env.example          # Frontend environment template
+│   ├── Dockerfile            # Frontend container definition
+│   └── vite.config.js        # Vite bundler configuration
+├── docker-compose.yml        # Multi-container full-stack composition
+├── bugs.md                   # Technical bug fixes, root causes & optimizations log
+├── .gitignore                # Git ignore rules (protects credentials and virtual environments)
+└── README.md                 # Project documentation
 ```
-
----
-
-## ⚠️ Notes for Windows Users
-
-- **Docker Container Management (`docker start`)**:
-  If you restart your PC or stop containers, do **not** re-run `docker run` (which causes a `Conflict: The container name "/rbi_postgres" is already in use` error). Instead, simply start the existing container:
-  ```powershell
-  # Start the existing database container:
-  docker start rbi_postgres
-
-  # Or start the entire Docker Compose stack:
-  docker compose start
-  ```
-- **Docker Engine Not Running**:
-  If you encounter `failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine`, ensure **Docker Desktop** is opened and running from the Windows Start menu.
-- **PowerShell Execution Policy**: If `Activate.ps1` gives an execution policy error, run:
-  ```powershell
-  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-  ```
-- **Password Rotation**: Generate a bcrypt hash for a new admin password before production:
-  ```powershell
-  python scripts\hash_password.py
-  ```
-- **Scanned Documents**: The PDF parser expects selectable text. For scanned PDFs without text layers, run an OCR tool before indexing.
 
 ---
 
