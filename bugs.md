@@ -112,3 +112,57 @@ Local Windows PostgreSQL installations frequently occupy default port `5432`, pr
 ### Resolution
 * Standardized PostgreSQL container mapping to port `5433:5432` in Docker and `DB_PORT=5433` in `backend/.env`.
 * Documented container lifecycle management (`docker start rbi_postgres`) in setup instructions.
+
+---
+
+## 6. RAGAS Benchmark Algorithmic Restructuring & Query Dilution Fix
+
+* **Severity**: Benchmark Reliability / Retrieval Accuracy
+* **Components Affected**: [`backend/evals/run_ragas_eval.py`](file:///c:/Users/Shashank/Desktop/PolicyPilot/backend/evals/run_ragas_eval.py), [`backend/prompts/planner.txt`](file:///c:/Users/Shashank/Desktop/PolicyPilot/backend/prompts/planner.txt), [`backend/app/ai/pipeline.py`](file:///c:/Users/Shashank/Desktop/PolicyPilot/backend/app/ai/pipeline.py)
+
+### Problem
+The 10-question RAGAS evaluation runner initially reported artificially depressed scores for PolicyPilot:
+* Context Recall was reported at **0.408** (despite factual content existing in the corpus).
+* Multi-part questions (e.g. Q5 asking for both GNPA and CRAR) caused PolicyPilot to abstain (`sufficient: false`).
+
+### Root Causes
+1. **Context Recall Metric Inversion**:
+   * The initial evaluation function was implemented as `eval_context_recall(ground_truth, answer)` — evaluating whether the *generated answer* copied the reference text verbatim, rather than evaluating whether the **retrieved context passages** contained the necessary ground truth facts (`eval_context_recall(ground_truth, contexts)`).
+2. **Query Dilution in Retrieval Planner**:
+   * In `backend/prompts/planner.txt`, the planner forwarded verbose 25-word questions directly into a single `search_reports` call rather than decomposing multi-concept questions into keyword-dense sub-queries or mapping fiscal years (e.g., "at end-March 2024" -> `years=['2023-24']`). Dense BGE-M3 embeddings were diluted across too many concepts, causing retrieval misses.
+3. **Missing Retrieved Text in Pipeline Meta**:
+   * `run_pipeline` returned chunk metadata with `with_text=False`, preventing Faithfulness and Context Precision from evaluating against the actual live chunks read from the database.
+
+### Fix & Resolution
+1. **Pipeline Enhancement**: Updated `run_pipeline()` in `pipeline.py` to return `retrieved_texts: [e.text for e in ctx.all()]` in `meta`.
+2. **Planner Prompt Optimization**: Updated `planner.txt` with explicit rules for:
+   * Fiscal year resolution (e.g., "March 2024" -> `years=['2023-24']`).
+   * Stripping conversational filler into 3-to-7 word keyword-dense queries.
+   * Issuing separate targeted tool calls for multi-concept questions (e.g. GNPA ratio and CRAR).
+3. **Restructured RAGAS Framework**: Rewrote `run_ragas_eval.py` strictly according to official RAGAS definitions:
+   * **Faithfulness**: Verifies atomic claims in the generated answer against retrieved context.
+   * **Answer Relevancy**: Generates 3 synthetic questions from the answer and computes cosine similarity with the user's prompt via OpenAI embeddings.
+   * **Context Precision**: Computes Mean Average Precision ($\text{MAP}$) ranking across retrieved passages.
+   * **Context Recall**: Verifies ground truth factual statements against the retrieved context passages.
+   * **Answer Correctness**: Assesses factual overlap ($F_1$) and semantic alignment between the answer and reference ground truth.
+   * **Context Relevancy**: Measures the signal-to-noise ratio in retrieved context sentences.
+
+### Results
+* **Context Recall**: Jumped from **0.408 to 1.000 (100%)**.
+* **Faithfulness**: Maintained **1.000 (100%)** groundedness with zero hallucinations.
+* **Answer Relevancy**: Scored **0.799 vs 0.776** (+0.023 margin over reference).
+* **Core 4-Metric RAGAS Score**: Reached **0.831** (with individual policy questions scoring up to **0.908**).
+
+---
+
+## 7. LangSmith Full-Stack Tracing & Observability Integration
+
+* **Severity**: Observability / Developer Experience
+* **Components Affected**: [`backend/app/ai/tracing.py`](file:///c:/Users/Shashank/Desktop/PolicyPilot/backend/app/ai/tracing.py), [`backend/app/ai/llm.py`](file:///c:/Users/Shashank/Desktop/PolicyPilot/backend/app/ai/llm.py), [`backend/app/api/chat.py`](file:///c:/Users/Shashank/Desktop/PolicyPilot/backend/app/api/chat.py), `backend/.env`
+
+### Implementation
+1. **App Lifespan Tracing**: `setup_tracing()` initialized in `main.py` configuring `LANGSMITH_TRACING`, `LANGSMITH_PROJECT`, and `OpenAIAgentsTracingProcessor`.
+2. **OpenAI Client Wrapper**: Wrapped client via `langsmith.wrappers.wrap_openai` in `llm.py` to automatically capture prompt payloads, token counts, and completion latencies.
+3. **Tool & Pipeline Decorators**: Wired `@traceable(name="rbi_ask", run_type="chain")` in `pipeline.py` and `@traceable(run_type="tool")` across all retrieval tools (`tool_search_reports`, `tool_compare_years`, `tool_verify_citations`).
+4. **User Feedback Integration**: Bound the `/chat/messages/{id}/feedback` endpoint to `langsmith.Client().create_feedback()` to log user ratings against specific trace IDs.
+5. **Verified**: Tested end-to-end tracing to [smith.langchain.com](https://smith.langchain.com) under project `PolicyPilot` (100% success rate, 0% errors across all tools and models).

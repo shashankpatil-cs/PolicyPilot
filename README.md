@@ -14,13 +14,15 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-CUDA%2012.4%20Accelerated-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-Workflow%20Orchestration-1C3C3C?style=flat-square)](https://github.com/langchain-ai/langgraph)
 [![OpenAI Agents](https://img.shields.io/badge/OpenAI%20Agents-Deep%20Research-412991?style=flat-square&logo=openai&logoColor=white)](https://openai.com/)
+[![LangSmith](https://img.shields.io/badge/LangSmith-Observability%20%26%20Tracing-FF6F00?style=flat-square&logo=langchain&logoColor=white)](https://smith.langchain.com/)
+[![RAGAS](https://img.shields.io/badge/RAGAS-0.831%20Core%20Score-brightgreen?style=flat-square)](backend/evals/run_ragas_eval.py)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
 **An Enterprise-Grade Autonomous RAG & Deep Policy Intelligence Platform for Multi-Year Reserve Bank of India (RBI) Annual Reports.**
 
-*Zero hallucinations • Verbatim citation grounding • Hybrid semantic + lexical retrieval • Local GPU vector embeddings*
+*Zero hallucinations • Verbatim citation grounding • Hybrid semantic + lexical retrieval • Local GPU vector embeddings • Full-stack LangSmith observability*
 
-[System Architecture](#-system-architecture) • [Workflow Flowcharts](#-end-to-end-workflow-flowcharts) • [Key Capabilities](#-key-capabilities) • [Quickstart Guide](#-quickstart-guide) • [Configuration](#-configuration-reference) • [Engineering Highlights](#-engineering-highlights--optimizations)
+[System Architecture](#-system-architecture) • [Workflow Flowcharts](#-end-to-end-workflow-flowcharts) • [Key Capabilities](#-key-capabilities) • [RAGAS Benchmark](#-ragas-evaluation-benchmark) • [LangSmith Observability](#-langsmith-observability--tracing) • [Quickstart Guide](#-quickstart-guide) • [Configuration](#-configuration-reference)
 
 </div>
 
@@ -232,6 +234,54 @@ flowchart TD
 
 ---
 
+## 📊 RAGAS Evaluation Benchmark
+
+PolicyPilot includes a comprehensive live evaluation harness ([backend/evals/run_ragas_eval.py](backend/evals/run_ragas_eval.py)) benchmarking 10 policy questions across all core RAGAS metrics (0.000 to 1.000 scale) comparing PolicyPilot's live pipeline against reference high-quality answers:
+
+| Metric | PolicyPilot | Other Platform | Margin | Evaluation Methodology |
+| :--- | :---: | :---: | :---: | :--- |
+| **Faithfulness (Groundedness)** | **1.000** | 1.000 | `+0.000` | Verifies every factual claim in the generated answer against retrieved context. |
+| **Answer Relevancy (Intent)** | **0.799** | 0.776 | `+0.023` | Embeds 3 LLM-generated synthetic questions and computes cosine similarity with user query. |
+| **Context Recall (Info Gain)** | **1.000** | 1.000 | `+0.000` | Verifies whether retrieved context chunks contain the facts needed to support ground truth. |
+| **Context Precision (MAP)** | **0.526** | 1.000 | `-0.474` | Measures Mean Average Precision ranking of relevant passages retrieved from pgvector. |
+| **Answer Correctness (Factual)** | **0.625** | 0.970 | `-0.345` | Factual overlap ($F_1$) and semantic alignment between answer and reference ground truth. |
+| **Context Relevancy (Signal/Noise)** | **0.310** | 0.900 | `-0.590` | Evaluates proportion of retrieved context sentences directly relevant to the question. |
+| **CORE 4-METRIC RAGAS SCORE** | **0.831** | **0.944** | `-0.113` | Average of Faithfulness, Relevancy, Precision, and Recall. |
+
+To run the live benchmark:
+```powershell
+cd backend/evals
+..\venv\Scripts\python run_ragas_eval.py
+```
+
+---
+
+## 🔭 LangSmith Observability & Tracing
+
+PolicyPilot features full-stack observability with [LangSmith](https://smith.langchain.com/):
+
+```text
+▼ rbi_ask (Root Chain)
+  ├── ⚙️ planner (LLM extracts keywords & targets fiscal years)
+  ├── 🔍 tool_search_reports (PgVector HNSW hybrid retrieval)
+  ├── 🤖 ChatOpenAI (Generates answer with [S1], [S2] citations)
+  └── 🛡️ validate (Deterministic verification of quotes & numbers)
+```
+
+* **Waterfall Trace Tree**: Inspect end-to-end latency breakdowns across embedding generation, database vector search, and LLM completions.
+* **Token & Cost Tracking**: Live monitoring of prompt vs. completion tokens and estimated cost in USD per query ($0.06 over ~28K tokens).
+* **Tool Usage Analytics**: Real-time logging of tool distributions (`tool_search_reports`, `compare_years`, `list_available_reports`, `verify_citations`).
+* **User Feedback Loop**: Thumbs up / down ratings in the UI automatically attach to trace IDs via `Client().create_feedback()`.
+
+To enable tracing, set in `backend/.env`:
+```env
+LANGSMITH_TRACING=true
+LANGSMITH_API_KEY=lsv2_pt_your_key_here
+LANGSMITH_PROJECT=PolicyPilot
+```
+
+---
+
 ## 🛠️ Tech Stack
 
 * **Backend**: Python 3.11+, FastAPI, SQLAlchemy 2.0, Pydantic v2
@@ -348,7 +398,9 @@ Key variables available in `backend\.env`:
 | `MAX_EVIDENCE_CHUNKS` | `16` | Maximum evidence pool retained in context. |
 | `HYBRID_SEARCH` | `true` | Enables dual vector + full-text search fusion. |
 | `VALIDATION_LLM_CHECK` | `true` | Secondary LLM claim verification (can set to `false` for lean operation). |
-| `LANGSMITH_TRACING` | `false` | Observability and latency tracing via LangSmith. |
+| `LANGSMITH_TRACING` | `true` | Full-stack observability and latency tracing via LangSmith. |
+| `LANGSMITH_PROJECT` | `PolicyPilot` | Target project namespace in LangSmith dashboard. |
+| `LANGSMITH_ENDPOINT` | `https://api.smith.langchain.com` | Cloud or self-hosted LangSmith API endpoint. |
 
 ---
 
