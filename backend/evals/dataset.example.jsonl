@@ -1,0 +1,3 @@
+{"question": "What were the key highlights of the Reserve Bank's balance sheet for 2023-24?", "years": ["2023-24"], "expect_answerable": true, "expected_keywords": ["balance sheet", "assets", "liabilities"], "expected_years": ["2023-24"]}
+{"question": "How did digital payments and UPI transactions grow according to the 2022-23 report?", "years": ["2022-23"], "expect_answerable": true, "expected_keywords": ["UPI", "digital", "payments"], "expected_years": ["2022-23"]}
+{"question": "What was the capital adequacy requirement set by the Bank of England in 1844?", "expect_answerable": false}

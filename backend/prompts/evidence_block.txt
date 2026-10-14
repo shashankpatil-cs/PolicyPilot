@@ -1,0 +1,2 @@
+[{{source_id}}] Report {{report_year}}, PDF page {{page_number}}
+{{text}}
