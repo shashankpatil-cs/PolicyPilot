@@ -136,8 +136,8 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    Start([User submits question]) --> Analyze[1. Analyze & Plan<br/>gpt-4.1-mini plans retrieval strategy]
-    Analyze --> Retrieve[2. Hybrid Retrieval Engine]
+    Start(["User submits question"]) --> Analyze["1. Analyze & Plan<br/>gpt-4.1-mini plans retrieval strategy"]
+    Analyze --> Retrieve["2. Hybrid Retrieval Engine"]
 
     subgraph RetrievalEngine ["Local Hybrid Retrieval (Zero Cloud Tokens)"]
         direction LR
@@ -149,13 +149,13 @@ flowchart TD
     end
 
     Retrieve --> RetrievalEngine
-    RetrievalEngine --> FilterChunks[Filter by Year & Threshold >= 0.35]
-    FilterChunks --> CheckEvidence{Evidence<br/>found?}
+    RetrievalEngine --> FilterChunks["Filter by Year & Threshold >= 0.35"]
+    FilterChunks --> CheckEvidence{"Evidence<br/>found?"}
 
-    CheckEvidence -->|No| Abstain[Abstain Gracefully<br/>'I could not find enough evidence...']
-    CheckEvidence -->|Yes| Generate[3. Generate Draft Answer<br/>gpt-4.1 cites [S#] tags with quotes]
+    CheckEvidence -->|No| Abstain["Abstain Gracefully<br/>'I could not find enough evidence...'"]
+    CheckEvidence -->|Yes| Generate["3. Generate Draft Answer<br/>gpt-4.1 cites [S#] tags with quotes"]
 
-    Generate --> Validate[4. Deterministic Verification]
+    Generate --> Validate["4. Deterministic Verification"]
 
     subgraph AntiHallucination ["Verification Guardrails"]
         direction TB
@@ -166,14 +166,14 @@ flowchart TD
     end
 
     Validate --> AntiHallucination
-    AntiHallucination --> ResultPass{Passes<br/>Validation?}
+    AntiHallucination --> ResultPass{"Passes<br/>Validation?"}
 
-    ResultPass -->|Yes| Finalize[5. Finalize Answer<br/>Serve verified answer + citations]
-    ResultPass -->|No & Attempts < 2| Repair[Retry with Feedback<br/>Feed missing quotes back to model]
+    ResultPass -->|Yes| Finalize["5. Finalize Answer<br/>Serve verified answer + citations"]
+    ResultPass -->|"No (Attempts < 2)"| Repair["Retry with Feedback<br/>Feed missing quotes back to model"]
     Repair --> Generate
-    ResultPass -->|No & Max Attempts| Abstain
+    ResultPass -->|"No (Max Attempts)"| Abstain
 
-    Finalize --> End([Render in UI with Collapsible Sources Dropdown])
+    Finalize --> End(["Render in UI with Collapsible Sources Dropdown"])
     Abstain --> End
 ```
 
@@ -185,11 +185,11 @@ For comparative multi-year inquiries (e.g. *"Compare CPI inflation trends in 202
 
 ```mermaid
 flowchart TD
-    UserQuery([Complex Multi-Year Query]) --> AgentInit[Initialize Research Agent<br/>Scoped AsyncOpenAI Client]
+    UserQuery(["Complex Multi-Year Query"]) --> AgentInit["Initialize Research Agent<br/>Scoped AsyncOpenAI Client"]
 
     subgraph ReActLoop ["Autonomous Agent ReAct Loop (Up to 10 Turns)"]
-        Think[Reasoning & Plan Next Action]
-        ToolCall{Choose Tool}
+        Think["Reasoning & Plan Next Action"]
+        ToolCall{"Choose Tool"}
 
         T1["list_available_reports()<br/>Inspect indexed fiscal years"]
         T2["search_reports(query, years)<br/>Semantic + keyword hybrid search"]
@@ -209,11 +209,11 @@ flowchart TD
     end
 
     AgentInit --> ReActLoop
-    ReActLoop --> DraftOutput[Synthesize Comparative Output<br/>Format [S#] markers and citations]
-    DraftOutput --> ServerCheck[Server-Side Independent Verification<br/>Verify all quotes exist in retrieved chunks]
+    ReActLoop --> DraftOutput["Synthesize Comparative Output<br/>Format [S#] markers and citations"]
+    DraftOutput --> ServerCheck["Server-Side Independent Verification<br/>Verify all quotes exist in retrieved chunks"]
 
-    ServerCheck -->|Passed| FinalResp[Deliver Structured Research Report]
-    ServerCheck -->|Failed| SelfRepair[Agent Repair Loop with Error Feedback]
+    ServerCheck -->|Passed| FinalResp["Deliver Structured Research Report"]
+    ServerCheck -->|Failed| SelfRepair["Agent Repair Loop with Error Feedback"]
     SelfRepair --> ReActLoop
 ```
 
